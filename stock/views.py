@@ -84,8 +84,8 @@ def stock_sell(request, pk):
                                                                 defaults={'average_sell_cost': 0, 'amount': 0})
         current_cost = acc_stock.amount
 
-        total_cost = current_cost - sell_cost
-        total_amount = acc_stock.amount + amount
+        total_cost = current_cost + sell_cost
+        total_amount = acc_stock.amount - amount
 
         acc_stock.amount = total_amount
 

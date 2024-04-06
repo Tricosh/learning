@@ -85,17 +85,16 @@ def stock_sell(request, pk):
         current_cost = acc_stock.amount
 
         total_cost = current_cost + sell_cost
-        total_amount = acc_stock.amount - amount
-
-        acc_stock.amount = total_amount
 
         acc_currency, created = AccountCurrency.objects.get_or_create(account=request.user.account, currency=stock.currency,
                                                                       defaults={'amount': 0})
 
-        if acc_currency.amount < sell_cost:
-            form.add_error(None, f'На счёте недостаточно средств в валюте {stock.currency.sign}')
+        if acc_stock.amount < amount:
+            form.add_error(None, f'На счёте недостаточно акций {amount}')
         else:
             acc_currency.amount = acc_currency.amount + sell_cost
+            total_amount = acc_stock.amount - amount
+            acc_stock.amount = total_amount
             acc_stock.save()
             acc_currency.save()
             return redirect('stock:list')
